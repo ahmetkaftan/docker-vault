@@ -2,7 +2,7 @@ version: "3.7"
 services:
   vault:
     image: vault:1.4.2
-    container_name: bp-vault
+    container_name: vault
     hostname: vault
     ports:
       - 8200:8200
@@ -18,7 +18,7 @@ services:
 
   vault-init:
     image: vault:1.4.2
-    container_name: bp-vault-init
+    container_name: vault-init
     environment:
       - VAULT_ADDR=http://vault:8200
     volumes:
