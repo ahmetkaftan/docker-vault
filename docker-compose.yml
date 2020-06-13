@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+  vault:
+    image: vault:1.4.2
+    container_name: bp-vault
+    hostname: vault
+    ports:
+      - 8200:8200
+    volumes:
+      - ./config.hcl:/vault/config/config.hcl
+      - vault-data:/vault/file/
+    environment:
+      - VAULT_ADDR=http://localhost:8200
+    cap_add:
+      - IPC_LOCK
+    command: server
+    restart: always
+
+  vault-init:
+    image: vault:1.4.2
+    container_name: bp-vault-init
+    environment:
+      - VAULT_ADDR=http://vault:8200
+    volumes:
+      - ./vault-root-token:/vault/file/vault-root-token
+      - ./vault-init.sh:/usr/local/bin/vault-init.sh
+      - vault-data:/vault/file/
+    command: /usr/local/bin/vault-init.sh
+    restart: on-failure
+    depends_on:
+      - vault
+
+volumes:
+  vault-data:
