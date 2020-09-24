@@ -10,8 +10,15 @@ vault operator unseal $(grep 'Key 3:' /vault/file/keys | awk '{print $NF}')
 
 init () {
 vault operator init > /vault/file/keys
-echo $(grep 'Initial Root Token:' /vault/file/keys | awk '{print $NF}') > /vault/file/vault-root-token
+}
 
+log_in () {
+   export ROOT_TOKEN=$(grep 'Initial Root Token:' /vault/file/keys | awk '{print $NF}')
+   vault login $ROOT_TOKEN
+}
+
+create_token () {
+   vault token create -policy root -id $MY_VAULT_TOKEN
 }
 
 if [ -s /vault/file/keys ]; then
@@ -19,6 +26,8 @@ if [ -s /vault/file/keys ]; then
 else
    init
    unseal
+   log_in
+   create_token
 fi
 
 vault status > /vault/file/status

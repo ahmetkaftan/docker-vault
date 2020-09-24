@@ -11,6 +11,7 @@ services:
       - vault-data:/vault/file/
     environment:
       - VAULT_ADDR=http://localhost:8200
+      - MY_VAULT_TOKEN=${MY_VAULT_TOKEN:-test}
     cap_add:
       - IPC_LOCK
     command: server
