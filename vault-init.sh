@@ -18,7 +18,7 @@ log_in () {
 }
 
 create_token () {
-   vault token create -policy root -id $MY_VAULT_TOKEN
+   vault token create -id $MY_VAULT_TOKEN
 }
 
 if [ -s /vault/file/keys ]; then
