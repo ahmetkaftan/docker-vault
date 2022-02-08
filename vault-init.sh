@@ -3,22 +3,22 @@
 set -ex
 
 unseal () {
-vault operator unseal $(grep 'Key 1:' /vault/file/keys | awk '{print $NF}')
-vault operator unseal $(grep 'Key 2:' /vault/file/keys | awk '{print $NF}')
-vault operator unseal $(grep 'Key 3:' /vault/file/keys | awk '{print $NF}')
+vault operator unseal -tls-skip-verify $(grep 'Key 1:' /vault/file/keys | awk '{print $NF}')
+vault operator unseal -tls-skip-verify $(grep 'Key 2:' /vault/file/keys | awk '{print $NF}')
+vault operator unseal -tls-skip-verify $(grep 'Key 3:' /vault/file/keys | awk '{print $NF}')
 }
 
 init () {
-vault operator init > /vault/file/keys
+vault operator init -tls-skip-verify > /vault/file/keys
 }
 
 log_in () {
    export ROOT_TOKEN=$(grep 'Initial Root Token:' /vault/file/keys | awk '{print $NF}')
-   vault login $ROOT_TOKEN
+   vault login -tls-skip-verify $ROOT_TOKEN
 }
 
 create_token () {
-   vault token create -id $MY_VAULT_TOKEN
+   vault token create -tls-skip-verify -id $MY_VAULT_TOKEN
 }
 
 if [ -s /vault/file/keys ]; then
@@ -30,4 +30,4 @@ else
    create_token
 fi
 
-vault status > /vault/file/status
+vault status -tls-skip-verify > /vault/file/status
